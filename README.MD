@@ -117,17 +117,15 @@ PS: 因为我们在java代码中设置控件大小随加载的图片变化，所
 ### 提供的接口
 
 ```java
-		mDrawingView = (DrawingView) findViewById(R.id.img_screenshot);        
-		mDrawingView.initializePen();// 初始化画笔
-        mDrawingView.setPenSize(10);// 设置画笔大小
-        mDrawingView.setPenColor(getColor(R.color.red)); // 设置画笔颜色
-		mDrawingView.loadImage(bitmap);// 加载图片
-		mDrawingView.saveImage(sdcardPath, "DrawImg", Bitmap.CompressFormat.PNG, 100);//保存图片
-		mDrawingView.undo();// 撤销上一步
-		mDrawingView.getImageBitmap();// 返回控件上的bitmap，可用于保存文件
+    mDrawingView = (DrawingView) findViewById(R.id.img_screenshot);
+    mDrawingView.initializePen();// 初始化画笔
+    mDrawingView.setPenSize(10);// 设置画笔大小
+    mDrawingView.setPenColor(getColor(R.color.red));// 设置画笔颜色
+    mDrawingView.loadImage(bitmap);// 加载图片
+    mDrawingView.saveImage(sdcardPath, "DrawImg", Bitmap.CompressFormat.PNG, 100);//保存图片
+    mDrawingView.undo();// 撤销上一步
+    mDrawingView.getImageBitmap();// 返回控件上的bitmap，可用于保存文件
 ```
-
-
 
 **github地址：**[https://github.com/hcz017/DrawingView](https://github.com/hcz017/DrawingView)
 
