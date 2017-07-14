@@ -53,7 +53,36 @@ gif效果展示：
 
 ### 增加撤销功能
 
-思路源于在掘金上看到的一篇文章，具体就是创建一个列表，在每次手指抬起时（`MotionEvent.ACTION_UP`）记录下paint的关键属性和path，需要“撤销”的时候先清空画布，然后重新加载图片，之后移除列表中的最后一笔，把列表中记录的paint和path重绘一次。
+思路源于在掘金上看到的一篇文章，具体就是创建一个列表，在每次手指抬起时（`MotionEvent.ACTION_UP`）记录下paint和path，需要“撤销”的时候先清空画布，然后重新加载图片，之后移除列表中的最后一笔，最后把列表中记录的paint和path重绘一次。
+
+**记录画笔和路径**，注意如果你是直接保存mPaint和mPath的话，每次手指下落的时候都要新建这两个对象，不然会导致路径列表里所有路径都是一样的，因为他们保存的对象最终指向同样的内容。
+
+这里我做了一点小改变。不保存mPaint，只保存了mPaint的两个属性，这样就不用每次new Paint()了。
+
+```java
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+            	// 手指下落 新建Path对象
+                mPath = new Path();
+                ...
+                break;
+            case MotionEvent.ACTION_MOVE:
+                ...
+                mCanvas.drawPath(mPath, mPaint);
+                break;
+            case MotionEvent.ACTION_UP:
+                mPath.lineTo(mX, mY);
+                mCanvas.drawPath(mPath, mPaint);
+            	// 保存 path和paint的两个属性
+                savePath.add(new DrawPath(mPath, mPaint.getColor(), mPaint.getStrokeWidth()));
+                mPath = null;
+                break;
+            default:
+                break;
+        }
+```
+
+**撤销方法**，主要就是清空重绘。
 
 ```java
     public void undo() {
