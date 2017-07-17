@@ -65,9 +65,10 @@ public class DrawingView extends View {
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
         if (mBitmap != null) {
-            // 根据加载的图片尺寸缩放控件,这里只考虑了高大于宽的情况
-            if (mBitmap.getHeight() > heightSize) {
+            if ((mBitmap.getHeight() > heightSize) && (mBitmap.getHeight() > mBitmap.getWidth())) {
                 widthSize = heightSize * mBitmap.getWidth() / mBitmap.getHeight();
+            } else if ((mBitmap.getWidth() > widthSize) && (mBitmap.getWidth() > mBitmap.getHeight())) {
+                heightSize = widthSize * mBitmap.getHeight() / mBitmap.getWidth();
             } else {
                 heightSize = mBitmap.getHeight();
                 widthSize = mBitmap.getWidth();
