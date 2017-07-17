@@ -33,6 +33,7 @@ public class DrawingView extends View {
     private float mX, mY;
     private float mProportion = 0;
     private LinkedList<DrawPath> savePath;
+    private DrawPath mLastDrawPath;
 
     public DrawingView(Context c) {
         this(c, null);
@@ -118,6 +119,10 @@ public class DrawingView extends View {
         }
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                if (savePath.size() == 0 && mLastDrawPath != null) {
+                    mPaint.setColor(mLastDrawPath.getPaintColor());
+                    mPaint.setStrokeWidth(mLastDrawPath.getPaintWidth());
+                }
                 mPath = new Path();
                 mPath.reset();
                 mPath.moveTo(x, y);
@@ -138,7 +143,8 @@ public class DrawingView extends View {
             case MotionEvent.ACTION_UP:
                 mPath.lineTo(mX, mY);
                 mCanvas.drawPath(mPath, mPaint);
-                savePath.add(new DrawPath(mPath, mPaint.getColor(), mPaint.getStrokeWidth()));
+                mLastDrawPath = new DrawPath(mPath, mPaint.getColor(), mPaint.getStrokeWidth());
+                savePath.add(mLastDrawPath);
                 mPath = null;
                 break;
             default:
@@ -216,10 +222,6 @@ public class DrawingView extends View {
                 mCanvas.drawPath(dp.path, mPaint);
             }
             invalidate();
-        } else {
-            // TODO: 2017/7/12 这里留一个小bug
-            // 当第一笔和最后一笔画笔的样式（颜色和宽度）不同的时候，全部撤销后，这时画笔的样式被设置成了和
-            // 第一笔一样，此时再绘画使用的是和第一笔一样的样式，而工具栏上我们看到的是最后一笔的样式。
         }
     }
 
