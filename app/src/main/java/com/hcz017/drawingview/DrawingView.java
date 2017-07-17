@@ -34,6 +34,7 @@ public class DrawingView extends View {
     private float mProportion = 0;
     private LinkedList<DrawPath> savePath;
     private DrawPath mLastDrawPath;
+    private Matrix matrix;
 
     public DrawingView(Context c) {
         this(c, null);
@@ -53,6 +54,7 @@ public class DrawingView extends View {
         mBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
         mDrawMode = false;
         savePath = new LinkedList<>();
+        matrix = new Matrix();
     }
 
     @Override
@@ -91,8 +93,8 @@ public class DrawingView extends View {
         // 根据图片尺寸缩放图片，同样只考虑了高大于宽的情况
         float proportion = (float) canvas.getHeight() / mBitmap.getHeight();
         if (proportion < 1) {
-            Matrix matrix = new Matrix();
             mProportion = proportion;
+            matrix.reset();
             matrix.postScale(proportion, proportion);
             matrix.postTranslate((canvas.getWidth() - mBitmap.getWidth() * proportion) / 2, 0);
             canvas.drawBitmap(mBitmap, matrix, mBitmapPaint);
