@@ -35,6 +35,8 @@ public class DrawingView extends View {
     private LinkedList<DrawPath> savePath;
     private DrawPath mLastDrawPath;
     private Matrix matrix;
+    private float mPaintBarPenSize;
+    private int mPaintBarPenColor;
 
     public DrawingView(Context c) {
         this(c, null);
@@ -122,9 +124,10 @@ public class DrawingView extends View {
         }
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (savePath.size() == 0 && mLastDrawPath != null) {
-                    mPaint.setColor(mLastDrawPath.getPaintColor());
-                    mPaint.setStrokeWidth(mLastDrawPath.getPaintWidth());
+                // This happens when we undo a path
+                if (mLastDrawPath != null) {
+                    mPaint.setColor(mPaintBarPenColor);
+                    mPaint.setStrokeWidth(mPaintBarPenSize);
                 }
                 mPath = new Path();
                 mPath.reset();
@@ -176,7 +179,11 @@ public class DrawingView extends View {
         super.setBackgroundColor(color);
     }
 
+    /**
+     * This method should ONLY be called by clicking paint toolbar(outer class)
+     */
     public void setPenSize(float size) {
+        mPaintBarPenSize = size;
         mPaint.setStrokeWidth(size);
     }
 
@@ -184,7 +191,11 @@ public class DrawingView extends View {
         return mPaint.getStrokeWidth();
     }
 
+    /**
+     * This method should ONLY be called by clicking paint toolbar(outer class)
+     */
     public void setPenColor(@ColorInt int color) {
+        mPaintBarPenColor = color;
         mPaint.setColor(color);
     }
 
@@ -230,10 +241,11 @@ public class DrawingView extends View {
 
     /**
      * 保存图片，其实我个人建议在其他类里面写保存方法，{@link #getImageBitmap()}就是内容
+     *
      * @param filePath 路径名
      * @param filename 文件名
-     * @param format 存储格式
-     * @param quality 质量
+     * @param format   存储格式
+     * @param quality  质量
      * @return 是否保存成功
      */
     public boolean saveImage(String filePath, String filename, Bitmap.CompressFormat format,
