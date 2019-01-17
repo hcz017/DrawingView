@@ -38,7 +38,7 @@ gif效果展示：
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
         if (mBitmap != null) {
-            // 根据加载的图片尺寸缩放控件，这里只考虑了高大于宽的情况，其他情况请读者自行完善
+            // 根据加载的图片尺寸缩放控件，这里只考虑了高大于宽的情况，其他情况请读者自行完善（代码中已完善）
             if (mBitmap.getHeight() > heightSize) {
                 widthSize = heightSize * mBitmap.getWidth() / mBitmap.getHeight();
             } else {
