@@ -9,6 +9,10 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private DrawingView mDrawingView;
     private static int COLOR_PANEL = 0;
@@ -64,8 +68,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mDrawingView.undo();
                 break;
             case R.id.save:
-                String sdcardPath = Environment.getExternalStorageDirectory().toString();
-                if (mDrawingView.saveImage(sdcardPath, "DrawImg", Bitmap.CompressFormat.PNG, 100)){
+                String sdPicturesPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA).format(new Date());
+                String filename = sdPicturesPath  + "/DrawImage_" + timeStamp;
+                if (FileUtils.saveBitmap(filename, mDrawingView.getImageBitmap(), Bitmap.CompressFormat.PNG, 100)) {
                     Toast.makeText(this, "Save Success", Toast.LENGTH_SHORT).show();
                 }
                 break;

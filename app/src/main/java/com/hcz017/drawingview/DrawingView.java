@@ -15,9 +15,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.LinkedList;
 
 public class DrawingView extends View {
@@ -237,52 +234,6 @@ public class DrawingView extends View {
             }
             invalidate();
         }
-    }
-
-    /**
-     * 保存图片，其实我个人建议在其他类里面写保存方法，{@link #getImageBitmap()}就是内容
-     *
-     * @param filePath 路径名
-     * @param filename 文件名
-     * @param format   存储格式
-     * @param quality  质量
-     * @return 是否保存成功
-     */
-    public boolean saveImage(String filePath, String filename, Bitmap.CompressFormat format,
-                             int quality) {
-        if (quality > 100) {
-            Log.d("saveImage", "quality cannot be greater that 100");
-            return false;
-        }
-        File file;
-        FileOutputStream out = null;
-        try {
-            switch (format) {
-                case PNG:
-                    file = new File(filePath, filename + ".png");
-                    out = new FileOutputStream(file);
-                    return mBitmap.compress(Bitmap.CompressFormat.PNG, quality, out);
-                case JPEG:
-                    file = new File(filePath, filename + ".jpg");
-                    out = new FileOutputStream(file);
-                    return mBitmap.compress(Bitmap.CompressFormat.JPEG, quality, out);
-                default:
-                    file = new File(filePath, filename + ".png");
-                    out = new FileOutputStream(file);
-                    return mBitmap.compress(Bitmap.CompressFormat.PNG, quality, out);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
     }
 
     /**
